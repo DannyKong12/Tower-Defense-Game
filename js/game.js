@@ -18,11 +18,11 @@ var game = new Phaser.Game(config);
 var enemyModifier = 1.0;
 
 var enemyCount = 0;
-var enemiesToSpawn = 0;
+var enemiesToSpawn = 5;
 var shouldStartWave = false;
 var shouldConfiguredEnemies = false;
 var wave = 0;
-var money = 300;
+var money = 250;
 var playerHP = 100;
 var SPAWN_TIME = 1000;
 
@@ -145,7 +145,7 @@ function configureNextWave() {
     enemyCount = 0;
     wave += 1;
     shouldConfiguredEnemies = true;
-    money += 100;
+    money += 50;
 }
 
 function isWaveCompleted() {
@@ -161,16 +161,17 @@ function resetEnemies() {
 
 function configureEnemies() {
     if (shouldConfiguredEnemies) {
-        enemyModifier *= 1.1;
+        enemyModifier *= 1.2;
         resetEnemies();
-        buffSelector = 5;//Math.floor((Math.random() * 5) + 1);
+        buffSelector = Math.floor((Math.random() * 5) + 1);
 
         switch(buffSelector) {
             case 1: 
                 ENEMY_HP *= enemyModifier;
+                ENEMY_SPEED *= enemyModifier;
                 break;
             case 2:
-                ENEMY_SPEED *= enemyModifier;
+                ENEMY_SPEED *= (enemyModifier * enemyModifier);
                 break;
             case 3:
                 SPAWN_TIME /= (enemyModifier * Math.floor((Math.random() * 5) + 1));
@@ -178,11 +179,11 @@ function configureEnemies() {
             case 4: 
                 var modFactor = enemyModifier * Math.floor((Math.random() * 5) + 1);
                 ENEMY_HP *= modFactor
-                ENEMY_SPEED /= (modFactor * 1.5);
+                ENEMY_SPEED /= (modFactor * 1.2);
                 break;
             case 5: 
                 enemiesToSpawn = 1;
-                ENEMY_HP *= (enemyModifier * 10);
+                ENEMY_HP *= (enemyModifier * 15);
                 ENEMY_SPEED /= (enemyModifier * 1.5);
                 break;
         }
@@ -207,10 +208,12 @@ function configureEnemies() {
  function upgradesManager(cursors) {
      if (cursors.up.isDown && money > 200) {
          BULLET_DAMAGE *= 1.25;
+         MACHINEBULLET_DAMAGE *= 1.25;
          money -= 200;
      }
      if (cursors.right.isDown && money > 150) {
         TURRET_RANGE *= 1.25;
+        MACHINETURRET_RANGE *= 1.25;
         money -= 150;
     }
  }
