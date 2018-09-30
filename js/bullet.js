@@ -23,7 +23,7 @@ var Bullet = new Phaser.Class({
         this.setActive(true);
         this.setVisible(true);
         this.setPosition(x, y);
-        
+
         this.dx = Math.cos(angle);
         this.dy = Math.sin(angle);
 

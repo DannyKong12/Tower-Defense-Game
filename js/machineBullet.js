@@ -1,4 +1,4 @@
-
+var MACHINEBULLET_SPEED = 0.5;
 var MACHINEBULLET_DAMAGE = 50;
 
 var MachineBullet = new Phaser.Class({
@@ -23,7 +23,7 @@ var MachineBullet = new Phaser.Class({
         this.setActive(true);
         this.setVisible(true);
         this.setPosition(x, y);
-        
+
         this.dx = Math.cos(angle);
         this.dy = Math.sin(angle);
 

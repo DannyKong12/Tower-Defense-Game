@@ -12,17 +12,23 @@ var MachineTurret = new Phaser.Class({
             Phaser.GameObjects.Image.call(this, scene, 0, 0, 'machineTurret');
             this.nextTic = 0;
         },
-        place: function(i, j) {            
+        place: function(i, j) {
             this.y = i * 64 + 64/2;
             this.x = j * 64 + 64/2;
-            map[i][j] = 1;            
+            map[i][j] = 1;
         },
         fire: function() {
             var enemy = getEnemy(this.x, this.y, MACHINETURRET_RANGE);
             if(enemy) {
-                var angle = Phaser.Math.Angle.Between(this.x, this.y, enemy.x, enemy.y);
-                addMachineBullet(this.x, this.y, angle);
-                this.angle = (angle + Math.PI/2) * Phaser.Math.RAD_TO_DEG;
+              var length = Math.sqrt((this.x - enemy.x)*(this.x - enemy.x) + (this.y - enemy.y)*(this.y - enemy.y))/0.5;
+              var newpos = leading(enemy, length);
+              var newlength = Math.sqrt((this.x - newpos[0])*(this.x - newpos[0]) + (this.y - newpos[1])*(this.y - newpos[1]))/0.5;
+              if (newlength - length > 40) {
+                var newpos = leading(enemy, newlength);
+              }
+              var angle = Phaser.Math.Angle.Between(this.x, this.y, newpos[0], newpos[1]);
+              addMachineBullet(this.x, this.y, angle);
+              this.angle = (angle + Math.PI/2) * Phaser.Math.RAD_TO_DEG;
             }
         },
         update: function (time, delta)
@@ -54,7 +60,7 @@ function placeMachineTurret(pointer) {
                 machineTurret.setActive(true);
                 machineTurret.setVisible(true);
                 machineTurret.place(i, j);
-            }   
+            }
         }
     }
 }
@@ -65,13 +71,3 @@ function addMachineBullet(x, y, angle) {
         machineBullet.fire(x, y, angle);
     }
 }
-
-function getEnemy(x, y, distance) {
-    var enemyUnits = enemies.getChildren();
-    for(var i = 0; i < enemyUnits.length; i++) {       
-        if(enemyUnits[i].active && Phaser.Math.Distance.Between(x, y, enemyUnits[i].x, enemyUnits[i].y) < distance)
-            return enemyUnits[i];
-    }
-    return false;
-} 
-
